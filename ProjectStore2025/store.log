@@ -1,0 +1,327 @@
+[2025-05-19 19:39:12] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:39:12] INFO: Product 'Milk' added to store
+[2025-05-19 19:39:12] INFO: Product 'Soap' added to store
+[2025-05-19 19:39:12] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:39:12] INFO: Register 'R001' added to store
+[2025-05-19 19:39:12] ERROR: Failed to save receipt - Failed to save receipt to file: receipts \receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:181)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:44)
+Caused by: java.io.FileNotFoundException: receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)[2025-05-19 19:40:41] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:40:41] INFO: Product 'Milk' added to store
+[2025-05-19 19:40:41] INFO: Product 'Soap' added to store
+[2025-05-19 19:40:41] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:40:41] INFO: Register 'R001' added to store
+[2025-05-19 19:40:41] ERROR: Failed to save receipt to file: receipts \receipt_1.txt - receipts \receipt_1.txt (The system cannot find the path specified)
+java.io.FileNotFoundException: receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:44)
+[2025-05-19 19:40:41] ERROR: Failed to save receipt - Failed to save receipt to file: receipts \receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:207)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:44)
+Caused by: java.io.FileNotFoundException: receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)[2025-05-19 19:42:44] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:42:44] INFO: Product 'Milk' added to store
+[2025-05-19 19:42:44] INFO: Product 'Soap' added to store
+[2025-05-19 19:42:44] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:42:44] INFO: Register 'R001' added to store
+[2025-05-19 19:42:44] ERROR: Failed to save receipt to file: receipts \receipt_1.txt - receipts \receipt_1.txt (The system cannot find the path specified)
+java.io.FileNotFoundException: receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+[2025-05-19 19:42:44] ERROR: Failed to save receipt - Failed to save receipt to file: receipts \receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:207)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+Caused by: java.io.FileNotFoundException: receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	... 2 more
+[2025-05-19 19:42:44] ERROR: Store error occurred - Failed to save receipt
+org.example.exception.ReceiptException: Failed to save receipt
+	at org.example.model.store.Store.processSale(Store.java:150)
+	at org.example.Main.main(Main.java:51)
+Caused by: org.example.exception.ReceiptException: Failed to save receipt to file: receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:207)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	... 1 more
+Caused by: java.io.FileNotFoundException: receipts \receipt_1.txt (The system cannot find t[2025-05-19 19:43:56] INFO: Receipts directory initialized: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts 
+[2025-05-19 19:43:56] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:43:56] INFO: Product 'Milk' added to store
+[2025-05-19 19:43:56] INFO: Product 'Soap' added to store
+[2025-05-19 19:43:56] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:43:56] INFO: Register 'R001' added to store
+[2025-05-19 19:43:56] ERROR: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt - C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+[2025-05-19 19:43:56] ERROR: Failed to save receipt - Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:207)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	... 2 more
+[2025-05-19 19:43:56] ERROR: Store error occurred - Failed to save receipt
+org.example.exception.ReceiptException: Failed to save receipt
+	at org.example.model.store.Store.processSale(Store.java:150)
+	at org.example.Main.main(Main.java:51)
+Caused by: org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:207)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	... 1 more
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	... 2 more
+[2025-05-19 19:44:08] INFO: Receipts directory initialized: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts 
+[2025-05-19 19:44:08] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:44:08] INFO: Product 'Milk' added to store
+[2025-05-19 19:44:08] INFO: Product 'Soap' added to store
+[2025-05-19 19:44:08] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:44:08] INFO: Register 'R001' added to store
+[2025-05-19 19:44:08] ERROR: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt - C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+[2025-05-19 19:44:08] ERROR: Failed to save receipt - Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:207)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	... 2 more
+[2025-05-19 19:44:08] ERROR: Store error occurred - Failed to save receipt
+org.example.exception.ReceiptException: Failed to save receipt
+	at org.example.model.store.Store.processSale(Store.java:150)
+	at org.example.Main.main(Main.java:51)
+Caused by: org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:207)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	... 1 more
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:201)
+	... 2 more
+[2025-05-19 19:45:05] INFO: Logger initialized
+[2025-05-19 19:45:05] INFO: Receipts directory initialized: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts 
+[2025-05-19 19:45:05] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:45:05] INFO: Product 'Milk' added to store
+[2025-05-19 19:45:05] INFO: Product 'Soap' added to store
+[2025-05-19 19:45:05] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:45:05] INFO: Register 'R001' added to store
+[2025-05-19 19:45:05] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts 
+[2025-05-19 19:45:05] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+[2025-05-19 19:45:05] ERROR: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt - C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:213)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+[2025-05-19 19:45:05] ERROR: Failed to save receipt - Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:223)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:51)
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:213)
+	... 2 more
+[2025-05-19 19:45:05] ERROR: Store error occurred - Failed to save receipt
+org.example.exception.ReceiptException: Failed to save receipt
+	at org.example.model.store.Store.processSale(Store.java:150)
+	at org.example.Main.main(Main.java:51)
+Caused by: org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:223)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	... 1 more
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:213)
+	... 2 more
+[2025-05-19 19:45:05] INFO: Logger shutting down
+[2025-05-19 19:46:15] INFO: Logger initialized
+[2025-05-19 19:46:15] INFO: Receipts directory initialized: C:\Users\Lyubo Yankov\receipts 
+[2025-05-19 19:46:15] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:46:15] INFO: Product 'Milk' added to store
+[2025-05-19 19:46:15] INFO: Product 'Soap' added to store
+[2025-05-19 19:46:15] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:46:15] INFO: Register 'R001' added to store
+[2025-05-19 19:46:15] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\receipts 
+[2025-05-19 19:46:15] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\receipts \receipt_1.txt
+[2025-05-19 19:46:15] ERROR: Failed to save receipt to file: C:\Users\Lyubo Yankov\receipts \receipt_1.txt - C:\Users\Lyubo Yankov\receipts \receipt_1.txt (The system cannot find the path specified)
+java.io.FileNotFoundException: C:\Users\Lyubo Yankov\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:213)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:58)
+[2025-05-19 19:46:15] ERROR: Failed to save receipt - Failed to save receipt to file: C:\Users\Lyubo Yankov\receipts \receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:223)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	at org.example.Main.main(Main.java:58)
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:213)
+	... 2 more
+[2025-05-19 19:46:15] ERROR: Store error occurred - Failed to save receipt
+org.example.exception.ReceiptException: Failed to save receipt
+	at org.example.model.store.Store.processSale(Store.java:150)
+	at org.example.Main.main(Main.java:58)
+Caused by: org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\receipts \receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:223)
+	at org.example.model.store.Store.processSale(Store.java:146)
+	... 1 more
+Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\receipts \receipt_1.txt (The system cannot find the path specified)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:289)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:230)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:179)
+	at java.base/java.io.FileWriter.<init>(FileWriter.java:98)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:213)
+	... 2 more
+[2025-05-19 19:46:15] INFO: Logger shutting down
+[2025-05-19 19:47:28] INFO: Logger initialized
+[2025-05-19 19:47:28] INFO: Receipts directory initialized: C:\Users\Lyubo Yankov\receipts
+[2025-05-19 19:47:28] INFO: Store 'My Store' created with food markup: 0.2, non-food markup: 0.15
+[2025-05-19 19:47:28] INFO: Product 'Milk' added to store
+[2025-05-19 19:47:28] INFO: Product 'Soap' added to store
+[2025-05-19 19:47:28] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:47:28] INFO: Register 'R001' added to store
+[2025-05-19 19:47:28] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\receipts
+[2025-05-19 19:47:28] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\receipts\receipt_1.txt
+[2025-05-19 19:47:28] INFO: Successfully saved receipt #1 to file: C:\Users\Lyubo Yankov\receipts\receipt_1.txt
+[2025-05-19 19:47:28] INFO: Sale processed successfully. Receipt #1
+[2025-05-19 19:47:28] INFO: Logger shutting down
+[2025-05-19 19:53:13] INFO: Logger initialized
+[2025-05-19 19:53:13] INFO: Store 'My Store' created with food markup: 0.15, non-food markup: 0.2
+[2025-05-19 19:53:13] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:53:13] INFO: Cashier 'Jane Smith' added to store
+[2025-05-19 19:53:13] INFO: Register '1' added to store
+[2025-05-19 19:53:13] INFO: Register '2' added to store
+[2025-05-19 19:53:13] INFO: Product 'Milk' added to store with 50 units
+[2025-05-19 19:53:13] INFO: Product 'Bread' added to store with 30 units
+[2025-05-19 19:53:13] INFO: Product 'Soap' added to store with 40 units
+[2025-05-19 19:53:13] INFO: Product 'Shampoo' added to store with 25 units
+[2025-05-19 19:53:13] ERROR: Application error - No cashier assigned to register
+[2025-05-19 19:57:49] INFO: Logger initialized
+[2025-05-19 19:57:49] INFO: Store 'My Store' created with food markup: 0.15, non-food markup: 0.2
+[2025-05-19 19:57:49] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:57:49] INFO: Cashier 'Jane Smith' added to store
+[2025-05-19 19:57:49] INFO: Register '1' added to store
+[2025-05-19 19:57:49] INFO: Register '2' added to store
+[2025-05-19 19:57:49] INFO: Product 'Milk' added to store with 100 units
+[2025-05-19 19:57:49] INFO: Product 'Bread' added to store with 50 units
+[2025-05-19 19:57:49] INFO: Product 'Soap' added to store with 200 units
+[2025-05-19 19:57:49] INFO: Product 'Paper' added to store with 150 units
+[2025-05-19 19:59:02] INFO: Logger initialized
+[2025-05-19 19:59:02] INFO: Store 'My Store' created with food markup: 0.15, non-food markup: 0.2
+[2025-05-19 19:59:02] INFO: Cashier 'John Doe' added to store
+[2025-05-19 19:59:02] INFO: Cashier 'Jane Smith' added to store
+[2025-05-19 19:59:02] INFO: Register '1' added to store
+[2025-05-19 19:59:02] INFO: Register '2' added to store
+[2025-05-19 19:59:02] INFO: Product 'Milk' added to store with 100 units
+[2025-05-19 19:59:02] INFO: Product 'Bread' added to store with 50 units
+[2025-05-19 19:59:02] INFO: Product 'Soap' added to store with 200 units
+[2025-05-19 19:59:02] INFO: Product 'Paper' added to store with 150 units
+[2025-05-19 19:59:02] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+[2025-05-19 19:59:02] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-19 19:59:02] INFO: Successfully saved receipt #1 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-19 19:59:02] INFO: Sale processed successfully. Receipt #1
+[2025-05-19 19:59:02] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+[2025-05-19 19:59:02] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+[2025-05-19 19:59:02] INFO: Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+[2025-05-19 19:59:02] INFO: Sale processed successfully. Receipt #2
+[2025-05-19 20:05:30] INFO: Logger initialized
+[2025-05-19 20:05:30] INFO: Store 'My Store' created with food markup: 0.15, non-food markup: 0.2
+[2025-05-19 20:05:30] INFO: Cashier 'John Doe' added to store
+[2025-05-19 20:05:30] INFO: Cashier 'Jane Smith' added to store
+[2025-05-19 20:05:30] INFO: Register '1' added to store
+[2025-05-19 20:05:30] INFO: Register '2' added to store
+[2025-05-19 20:05:30] INFO: Product 'Milk' added to store with 100 units
+[2025-05-19 20:05:30] INFO: Product 'Bread' added to store with 50 units
+[2025-05-19 20:05:30] INFO: Product 'Soap' added to store with 200 units
+[2025-05-19 20:05:30] INFO: Product 'Paper' added to store with 150 units
+[2025-05-19 20:05:30] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+[2025-05-19 20:05:30] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-19 20:05:30] INFO: Successfully saved receipt #1 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-19 20:05:30] INFO: Sale processed successfully. Receipt #1
+[2025-05-19 20:05:30] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+[2025-05-19 20:05:30] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+[2025-05-19 20:05:30] INFO: Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+[2025-05-19 20:05:30] INFO: Sale processed successfully. Receipt #2

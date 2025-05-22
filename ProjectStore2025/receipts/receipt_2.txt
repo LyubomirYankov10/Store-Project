@@ -1,0 +1,7 @@
+Receipt #2
+Date: 2025-05-19T20:05:30.451461100
+Cashier: Jane Smith
+Items:
+- Soap x5 (1,00 each) = 5,00
+- Paper x2 (3,00 each) = 6,00
+Total Amount: 13,20
