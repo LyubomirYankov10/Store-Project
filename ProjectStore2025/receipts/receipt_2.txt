@@ -1,5 +1,5 @@
 Receipt #2
-Date: 2025-05-23 10:32:34
+Date: 2025-05-23 14:42:12
 Cashier: Teodor Ivanov
 Items:
 - Paper x2 ($3.00 each) = $6.00

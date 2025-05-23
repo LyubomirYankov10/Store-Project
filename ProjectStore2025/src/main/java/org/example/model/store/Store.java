@@ -7,6 +7,7 @@ import org.example.model.analytics.StoreAnalytics;
 import org.example.model.inventory.InventoryManager;
 import org.example.exception.StoreException;
 import org.example.exception.ReceiptException;
+import org.example.exception.ProductException;
 import org.example.util.StoreLogger;
 import org.example.config.StoreConfig;
 
@@ -138,11 +139,15 @@ public class Store {
             throw new StoreException("Insufficient payment. Required: " + totalAmount + ", Provided: " + payment);
         }
 
-        // Update inventory
-        for (Map.Entry<Product, Integer> entry : items.entrySet()) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue();
-            inventory.updateStock(product, -quantity);
+        // Update inventory atomically
+        try {
+            for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+                Product product = entry.getKey();
+                int quantity = entry.getValue();
+                inventory.updateStock(product, -quantity);
+            }
+        } catch (ProductException e) {
+            throw new StoreException("Failed to update inventory: " + e.getMessage(), e);
         }
 
         Receipt receipt = new Receipt(register.getAssignedCashier(), items, totalAmount);

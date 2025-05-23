@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Receipt implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final AtomicInteger nextReceiptNumber = new AtomicInteger(1);
+    private static final int MAX_RECEIPT_NUMBER = Integer.MAX_VALUE;
     private final int receiptNumber;
     private final Cashier cashier;
     private final LocalDateTime dateTime;
@@ -39,11 +40,21 @@ public class Receipt implements Serializable {
             throw new ReceiptException("Total amount cannot be negative");
         }
 
-        this.receiptNumber = nextReceiptNumber.getAndIncrement();
+        this.receiptNumber = generateReceiptNumber();
         this.cashier = cashier;
         this.dateTime = LocalDateTime.now();
         this.items = new HashMap<>(items);
         this.totalAmount = totalAmount;
+    }
+
+    private static synchronized int generateReceiptNumber() {
+        int current = nextReceiptNumber.get();
+        if (current >= MAX_RECEIPT_NUMBER) {
+            // Reset to 1 if we reach the maximum
+            nextReceiptNumber.set(1);
+            return 1;
+        }
+        return nextReceiptNumber.getAndIncrement();
     }
 
     public int getReceiptNumber() {
