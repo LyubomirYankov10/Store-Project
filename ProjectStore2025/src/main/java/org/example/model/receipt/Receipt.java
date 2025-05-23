@@ -5,32 +5,41 @@ import org.example.model.store.Cashier;
 import org.example.exception.ReceiptException;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Receipt implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static int receiptCounter = 0;
-
+    private static final AtomicInteger nextReceiptNumber = new AtomicInteger(1);
     private final int receiptNumber;
     private final Cashier cashier;
     private final LocalDateTime dateTime;
     private final Map<Product, Integer> items;
     private final double totalAmount;
+    private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Receipt(Cashier cashier, Map<Product, Integer> items, double totalAmount) {
         if (cashier == null) {
             throw new ReceiptException("Cashier cannot be null");
         }
-        if (items == null || items.isEmpty()) {
-            throw new ReceiptException("Items cannot be null or empty");
+        if (items == null) {
+            throw new ReceiptException("Items cannot be null");
+        }
+        if (items.isEmpty()) {
+            throw new ReceiptException("Items cannot be empty");
         }
         if (totalAmount < 0) {
             throw new ReceiptException("Total amount cannot be negative");
         }
 
-        this.receiptNumber = ++receiptCounter;
+        this.receiptNumber = nextReceiptNumber.getAndIncrement();
         this.cashier = cashier;
         this.dateTime = LocalDateTime.now();
         this.items = new HashMap<>(items);
@@ -61,7 +70,7 @@ public class Receipt implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Receipt #").append(receiptNumber).append("\n");
-        sb.append("Date: ").append(dateTime).append("\n");
+        sb.append("Date: ").append(dateTime.format(dateFormatter)).append("\n");
         sb.append("Cashier: ").append(cashier.getName()).append("\n");
         sb.append("Items:\n");
         
@@ -69,12 +78,15 @@ public class Receipt implements Serializable {
             Product product = entry.getKey();
             int quantity = entry.getValue();
             double price = product.getDeliveryPrice();
-            double itemTotal = price * quantity;
-            sb.append(String.format("- %s x%d (%.2f each) = %.2f\n", 
-                product.getName(), quantity, price, itemTotal));
+            double subtotal = price * quantity;
+            sb.append(String.format("- %s x%d (%s each) = %s\n",
+                product.getName(),
+                quantity,
+                currencyFormat.format(price),
+                currencyFormat.format(subtotal)));
         }
         
-        sb.append("Total Amount: ").append(String.format("%.2f", totalAmount));
+        sb.append("Total Amount: ").append(currencyFormat.format(totalAmount));
         return sb.toString();
     }
 

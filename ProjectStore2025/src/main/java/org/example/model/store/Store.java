@@ -12,21 +12,23 @@ import org.example.config.StoreConfig;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Store {
-    private String name;
-    private double foodMarkup;
-    private double nonFoodMarkup;
-    private int expirationWarningDays;
-    private double expirationDiscount;
-    private List<Cashier> cashiers;
-    private List<CashRegister> registers;
-    private List<Product> products;
-    private List<Receipt> receipts;
-    private double totalRevenue;
-    private double totalExpenses;
-    private StoreAnalytics analytics;
-    private InventoryManager inventory;
+    private final String name;
+    private final double foodMarkup;
+    private final double nonFoodMarkup;
+    private final int expirationWarningDays;
+    private final double expirationDiscount;
+    private final List<Cashier> cashiers;
+    private final List<CashRegister> registers;
+    private final List<Product> products;
+    private final List<Receipt> receipts;
+    private final AtomicReference<Double> totalRevenue;
+    private final AtomicReference<Double> totalExpenses;
+    private final StoreAnalytics analytics;
+    private final InventoryManager inventory;
 
     public Store(String name, double foodMarkup, double nonFoodMarkup, 
                 int expirationWarningDays, double expirationDiscount) {
@@ -35,12 +37,12 @@ public class Store {
         this.nonFoodMarkup = nonFoodMarkup;
         this.expirationWarningDays = expirationWarningDays;
         this.expirationDiscount = expirationDiscount;
-        this.cashiers = new ArrayList<>();
-        this.registers = new ArrayList<>();
-        this.products = new ArrayList<>();
-        this.receipts = new ArrayList<>();
-        this.totalRevenue = 0.0;
-        this.totalExpenses = 0.0;
+        this.cashiers = new CopyOnWriteArrayList<>();
+        this.registers = new CopyOnWriteArrayList<>();
+        this.products = new CopyOnWriteArrayList<>();
+        this.receipts = new CopyOnWriteArrayList<>();
+        this.totalRevenue = new AtomicReference<>(0.0);
+        this.totalExpenses = new AtomicReference<>(0.0);
         this.analytics = new StoreAnalytics();
         this.inventory = new InventoryManager();
         
@@ -54,7 +56,7 @@ public class Store {
             throw new StoreException("Cannot add null cashier");
         }
         cashiers.add(cashier);
-        totalExpenses += cashier.getMonthlySalary();
+        totalExpenses.updateAndGet(current -> current + cashier.getMonthlySalary());
         analytics.addExpense(cashier.getMonthlySalary());
         StoreLogger.info("Cashier '" + cashier.getName() + "' added to store");
     }
@@ -67,7 +69,7 @@ public class Store {
             cashier.getAssignedRegister().removeAssignedCashier();
         }
         cashiers.remove(cashier);
-        totalExpenses -= cashier.getMonthlySalary();
+        totalExpenses.updateAndGet(current -> current - cashier.getMonthlySalary());
         analytics.addExpense(-cashier.getMonthlySalary());
         StoreLogger.info("Cashier '" + cashier.getName() + "' removed from store");
     }
@@ -98,8 +100,9 @@ public class Store {
             throw new StoreException("Cannot add null product");
         }
         products.add(product);
-        totalExpenses += product.getDeliveryPrice() * initialStock;
-        analytics.addExpense(product.getDeliveryPrice() * initialStock);
+        double expense = product.getDeliveryPrice() * initialStock;
+        totalExpenses.updateAndGet(current -> current + expense);
+        analytics.addExpense(expense);
         inventory.addProduct(product, initialStock, reorderPoint, reorderQuantity);
         StoreLogger.info("Product '" + product.getName() + "' added to store with " + initialStock + " units");
     }
@@ -128,7 +131,38 @@ public class Store {
             throw new StoreException("No cashier assigned to register");
         }
 
-        double totalAmount = 0.0;
+        // Calculate total amount and validate stock
+        double totalAmount = calculateTotalAmount(items);
+
+        if (payment < totalAmount) {
+            throw new StoreException("Insufficient payment. Required: " + totalAmount + ", Provided: " + payment);
+        }
+
+        // Update inventory
+        for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            inventory.updateStock(product, -quantity);
+        }
+
+        Receipt receipt = new Receipt(register.getAssignedCashier(), items, totalAmount);
+        receipts.add(receipt);
+        totalRevenue.updateAndGet(current -> current + totalAmount);
+        analytics.addReceipt(receipt);
+
+        try {
+            saveReceiptToFile(receipt);
+            StoreLogger.info("Sale processed successfully. Receipt #" + receipt.getReceiptNumber());
+        } catch (Exception e) {
+            StoreLogger.error("Failed to save receipt", e);
+            throw new ReceiptException("Failed to save receipt", e);
+        }
+
+        return receipt;
+    }
+
+    private double calculateTotalAmount(Map<Product, Integer> items) {
+        double total = 0.0;
         for (Map.Entry<Product, Integer> entry : items.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
@@ -143,42 +177,22 @@ public class Store {
 
             double markup = product.getCategory() == ProductCategory.FOOD ? foodMarkup : nonFoodMarkup;
             double price = product.calculateSellingPrice(markup, expirationWarningDays, expirationDiscount);
-            totalAmount += price * quantity;
-            
-            inventory.updateStock(product, -quantity);
+            total += price * quantity;
         }
-
-        if (payment < totalAmount) {
-            throw new StoreException("Insufficient payment. Required: " + totalAmount + ", Provided: " + payment);
-        }
-
-        Receipt receipt = new Receipt(register.getAssignedCashier(), items, totalAmount);
-        receipts.add(receipt);
-        totalRevenue += totalAmount;
-        analytics.addReceipt(receipt);
-
-        try {
-            saveReceiptToFile(receipt);
-            StoreLogger.info("Sale processed successfully. Receipt #" + receipt.getReceiptNumber());
-        } catch (Exception e) {
-            StoreLogger.error("Failed to save receipt", e);
-            throw new ReceiptException("Failed to save receipt", e);
-        }
-
-        return receipt;
+        return total;
     }
 
     // Financial calculations
     public double getTotalRevenue() {
-        return totalRevenue;
+        return totalRevenue.get();
     }
 
     public double getTotalExpenses() {
-        return totalExpenses;
+        return totalExpenses.get();
     }
 
     public double getProfit() {
-        return totalRevenue - totalExpenses;
+        return totalRevenue.get() - totalExpenses.get();
     }
 
     // Analytics

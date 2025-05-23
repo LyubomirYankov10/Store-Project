@@ -1,7 +1,7 @@
 Receipt #1
-Date: 2025-05-19T20:05:30.419964800
-Cashier: John Doe
+Date: 2025-05-23 10:32:34
+Cashier: Ivan Georgiev
 Items:
-- Milk x2 (2,00 each) = 4,00
-- Bread x3 (1,50 each) = 4,50
-Total Amount: 9,26
+- Milk x2 ($2.00 each) = $4.00
+- Bread x3 ($1.50 each) = $4.50
+Total Amount: $9.26

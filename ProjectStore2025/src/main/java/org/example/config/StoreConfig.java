@@ -35,7 +35,7 @@ public class StoreConfig {
     }
 
     public static String getReceiptsDirectory() {
-        String dir = properties.getProperty("receipts.directory", DEFAULT_RECEIPTS_DIR);
+        String dir = properties.getProperty("receipts.directory", DEFAULT_RECEIPTS_DIR).trim();
         // Replace ${user.home} with actual user home directory
         dir = dir.replace("${user.home}", System.getProperty("user.home"));
         // Normalize path

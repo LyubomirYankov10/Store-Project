@@ -5,20 +5,23 @@ import org.example.model.product.FoodProduct;
 import org.example.exception.ProductException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InventoryManager {
-    private Map<Product, Integer> stockLevels;
-    private Map<Product, Integer> reorderPoints;
-    private Map<Product, Integer> reorderQuantities;
-    private List<Product> lowStockProducts;
-    private List<Product> expiredProducts;
+    private final Map<Product, AtomicInteger> stockLevels;
+    private final Map<Product, Integer> reorderPoints;
+    private final Map<Product, Integer> reorderQuantities;
+    private final List<Product> lowStockProducts;
+    private final List<Product> expiredProducts;
 
     public InventoryManager() {
-        this.stockLevels = new HashMap<>();
-        this.reorderPoints = new HashMap<>();
-        this.reorderQuantities = new HashMap<>();
-        this.lowStockProducts = new ArrayList<>();
-        this.expiredProducts = new ArrayList<>();
+        this.stockLevels = new ConcurrentHashMap<>();
+        this.reorderPoints = new ConcurrentHashMap<>();
+        this.reorderQuantities = new ConcurrentHashMap<>();
+        this.lowStockProducts = new CopyOnWriteArrayList<>();
+        this.expiredProducts = new CopyOnWriteArrayList<>();
     }
 
     public void addProduct(Product product, int initialStock, int reorderPoint, int reorderQuantity) {
@@ -29,7 +32,7 @@ public class InventoryManager {
             throw new ProductException("Invalid stock or reorder parameters");
         }
 
-        stockLevels.put(product, initialStock);
+        stockLevels.put(product, new AtomicInteger(initialStock));
         reorderPoints.put(product, reorderPoint);
         reorderQuantities.put(product, reorderQuantity);
         checkStockLevel(product);
@@ -40,23 +43,27 @@ public class InventoryManager {
             throw new ProductException("Product not found in inventory: " + product.getName());
         }
 
-        int currentStock = stockLevels.get(product);
-        int newStock = currentStock + quantity;
+        AtomicInteger currentStock = stockLevels.get(product);
+        int newStock = currentStock.addAndGet(quantity);
         
         if (newStock < 0) {
+            // Rollback the change
+            currentStock.addAndGet(-quantity);
             throw new ProductException("Insufficient stock for product: " + product.getName());
         }
 
-        stockLevels.put(product, newStock);
         checkStockLevel(product);
     }
 
     public int getStockLevel(Product product) {
-        return stockLevels.getOrDefault(product, 0);
+        if (!stockLevels.containsKey(product)) {
+            throw new ProductException("Product not found in inventory: " + product.getName());
+        }
+        return stockLevels.get(product).get();
     }
 
     public boolean needsReorder(Product product) {
-        return stockLevels.getOrDefault(product, 0) <= reorderPoints.getOrDefault(product, 0);
+        return getStockLevel(product) <= reorderPoints.getOrDefault(product, 0);
     }
 
     public int getReorderQuantity(Product product) {
@@ -64,16 +71,18 @@ public class InventoryManager {
     }
 
     public List<Product> getLowStockProducts() {
-        return new ArrayList<>(lowStockProducts);
+        return Collections.unmodifiableList(lowStockProducts);
     }
 
     public List<Product> getExpiredProducts() {
-        return new ArrayList<>(expiredProducts);
+        return Collections.unmodifiableList(expiredProducts);
     }
 
     private void checkStockLevel(Product product) {
-        // Check for low stock
-        if (needsReorder(product)) {
+        int currentStock = getStockLevel(product);
+        int reorderPoint = reorderPoints.get(product);
+
+        if (currentStock <= reorderPoint) {
             if (!lowStockProducts.contains(product)) {
                 lowStockProducts.add(product);
             }
@@ -81,7 +90,6 @@ public class InventoryManager {
             lowStockProducts.remove(product);
         }
 
-        // Check for expired products
         if (product.isExpired()) {
             if (!expiredProducts.contains(product)) {
                 expiredProducts.add(product);
@@ -95,15 +103,19 @@ public class InventoryManager {
         StringBuilder report = new StringBuilder();
         report.append("Inventory Report\n");
         report.append("================\n\n");
-
+        
         report.append("Current Stock Levels:\n");
         report.append("--------------------\n");
-        stockLevels.forEach((product, quantity) -> {
-            report.append(String.format("- %s: %d units", product.getName(), quantity));
-            if (needsReorder(product)) {
-                report.append(" (LOW STOCK - Reorder Point: ").append(reorderPoints.get(product))
-                      .append(", Reorder Quantity: ").append(reorderQuantities.get(product))
-                      .append(")");
+        for (Map.Entry<Product, AtomicInteger> entry : stockLevels.entrySet()) {
+            Product product = entry.getKey();
+            int stock = entry.getValue().get();
+            int reorderPoint = reorderPoints.get(product);
+            int reorderQuantity = reorderQuantities.get(product);
+            
+            report.append(String.format("- %s: %d units", product.getName(), stock));
+            if (stock <= reorderPoint) {
+                report.append(" (LOW STOCK - Reorder Point: ").append(reorderPoint)
+                      .append(", Reorder Quantity: ").append(reorderQuantity).append(")");
             }
             if (product.isExpired()) {
                 report.append(" (EXPIRED)");
@@ -112,16 +124,15 @@ public class InventoryManager {
                 }
             }
             report.append("\n");
-        });
-        report.append("\n");
-
+        }
+        
         if (!lowStockProducts.isEmpty()) {
             report.append("Low Stock Products:\n");
             report.append("------------------\n");
             lowStockProducts.forEach(product ->
                 report.append(String.format("- %s: %d units (Reorder Point: %d)\n",
                     product.getName(),
-                    stockLevels.get(product),
+                    getStockLevel(product),
                     reorderPoints.get(product))));
             report.append("\n");
         }
@@ -130,7 +141,7 @@ public class InventoryManager {
             report.append("Expired Products:\n");
             report.append("----------------\n");
             expiredProducts.forEach(product -> {
-                report.append(String.format("- %s: %d units", product.getName(), stockLevels.get(product)));
+                report.append(String.format("- %s: %d units", product.getName(), getStockLevel(product)));
                 if (product instanceof FoodProduct) {
                     report.append(" (Expired on: ").append(((FoodProduct) product).getExpirationDate()).append(")");
                 }
