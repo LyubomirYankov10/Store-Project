@@ -1,5 +1,5 @@
 Receipt #1
-Date: 2025-05-24 13:34:42
+Date: 2025-05-24 18:15:55
 Cashier: Ivan Georgiev
 Items:
 - Milk x2 ($2.00 each) = $4.00

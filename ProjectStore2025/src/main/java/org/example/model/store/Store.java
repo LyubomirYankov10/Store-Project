@@ -15,6 +15,11 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.nio.file.StandardOpenOption;
+import java.nio.ByteBuffer;
 
 public class Store {
     private final String name;
@@ -139,10 +144,13 @@ public class Store {
             throw new StoreException("Insufficient payment. Required: " + totalAmount + ", Provided: " + payment);
         }
 
+        // Create a copy of items for transaction
+        Map<Product, Integer> transactionItems = new HashMap<>(items);
+        
         // Update inventory atomically
         try {
             // First, validate all stock levels
-            for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+            for (Map.Entry<Product, Integer> entry : transactionItems.entrySet()) {
                 Product product = entry.getKey();
                 int quantity = entry.getValue();
                 if (inventory.getStockLevel(product) < quantity) {
@@ -151,7 +159,7 @@ public class Store {
             }
 
             // Then, update all stock levels
-            for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+            for (Map.Entry<Product, Integer> entry : transactionItems.entrySet()) {
                 Product product = entry.getKey();
                 int quantity = entry.getValue();
                 inventory.updateStock(product, -quantity);
@@ -160,17 +168,28 @@ public class Store {
             throw new StoreException("Failed to update inventory: " + e.getMessage(), e);
         }
 
-        Receipt receipt = new Receipt(register.getAssignedCashier(), items, totalAmount);
-        receipts.add(receipt);
-        totalRevenue.updateAndGet(current -> current + totalAmount);
-        analytics.addReceipt(receipt);
-
+        Receipt receipt = null;
         try {
+            receipt = new Receipt(register.getAssignedCashier(), transactionItems, totalAmount);
+            receipts.add(receipt);
+            totalRevenue.updateAndGet(current -> current + totalAmount);
+            analytics.addReceipt(receipt);
+
             saveReceiptToFile(receipt);
             StoreLogger.info("Sale processed successfully. Receipt #" + receipt.getReceiptNumber());
         } catch (Exception e) {
-            StoreLogger.error("Failed to save receipt", e);
-            throw new ReceiptException("Failed to save receipt", e);
+            // Rollback inventory changes if receipt creation fails
+            try {
+                for (Map.Entry<Product, Integer> entry : transactionItems.entrySet()) {
+                    Product product = entry.getKey();
+                    int quantity = entry.getValue();
+                    inventory.updateStock(product, quantity);
+                }
+            } catch (ProductException pe) {
+                StoreLogger.error("Failed to rollback inventory changes", pe);
+            }
+            StoreLogger.error("Failed to process sale", e);
+            throw new StoreException("Failed to process sale: " + e.getMessage(), e);
         }
 
         return receipt;
@@ -259,10 +278,26 @@ public class Store {
             }
 
             // Save receipt to file using try-with-resources
-            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(receiptFile)))) {
-                writer.println(receipt.toString());
-                StoreLogger.info("Successfully saved receipt #" + receipt.getReceiptNumber() + 
-                    " to file: " + fileName);
+            try (FileChannel channel = FileChannel.open(receiptFile.toPath(), 
+                    StandardOpenOption.CREATE, 
+                    StandardOpenOption.WRITE, 
+                    StandardOpenOption.TRUNCATE_EXISTING)) {
+                
+                // Try to acquire the lock
+                try (FileLock lock = channel.tryLock()) {
+                    if (lock == null) {
+                        throw new ReceiptException("Could not acquire file lock for receipt: " + fileName);
+                    }
+                    
+                    // Write the receipt content
+                    String receiptContent = receipt.toString();
+                    ByteBuffer buffer = ByteBuffer.wrap(receiptContent.getBytes());
+                    channel.write(buffer);
+                    channel.force(true); // Ensure data is written to disk
+                    
+                    StoreLogger.info("Successfully saved receipt #" + receipt.getReceiptNumber() + 
+                        " to file: " + fileName);
+                }
             }
         } catch (IOException e) {
             String error = "Failed to save receipt to file: " + fileName;

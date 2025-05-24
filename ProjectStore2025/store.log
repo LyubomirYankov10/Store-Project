@@ -415,3 +415,49 @@ Caused by: java.io.FileNotFoundException: C:\Users\Lyubo Yankov\receipts \receip
 [2025-05-24 13:34:43] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
 [2025-05-24 13:34:43] INFO: Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
 [2025-05-24 13:34:43] INFO: Sale processed successfully. Receipt #2
+[2025-05-24 18:14:53] INFO: Logger initialized
+[2025-05-24 18:14:53] INFO: Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+[2025-05-24 18:14:53] INFO: Cashier 'Ivan Georgiev' added to store
+[2025-05-24 18:14:53] INFO: Cashier 'Teodor Ivanov' added to store
+[2025-05-24 18:14:53] INFO: Register '1' added to store
+[2025-05-24 18:14:53] INFO: Register '2' added to store
+[2025-05-24 18:14:53] INFO: Product 'Milk' added to store with 100 units
+[2025-05-24 18:14:53] INFO: Product 'Bread' added to store with 50 units
+[2025-05-24 18:14:53] INFO: Product 'Soap' added to store with 200 units
+[2025-05-24 18:14:53] INFO: Product 'Paper' added to store with 150 units
+[2025-05-24 18:14:53] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+[2025-05-24 18:14:53] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-24 18:14:53] INFO: Successfully saved receipt #1 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-24 18:14:53] ERROR: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt - null
+java.nio.channels.ClosedChannelException
+	at java.base/sun.nio.ch.FileLockImpl.release(FileLockImpl.java:58)
+	at java.base/java.nio.channels.FileLock.close(FileLock.java:336)
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:296)
+	at org.example.model.store.Store.processSale(Store.java:177)
+	at org.example.Main.main(Main.java:84)
+[2025-05-24 18:14:53] ERROR: Failed to process sale - Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+org.example.exception.ReceiptException: Failed to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:300)
+	at org.example.model.store.Store.processSale(Store.java:177)
+	at org.example.Main.main(Main.java:84)
+Caused by: java.nio.channels.ClosedChannelException
+	at java.base/sun.nio.ch.FileLockImpl.release(FileLockImpl.java:58)
+	at java.base/java.nio.channels.FileLock.close(FileLock.java:336)
+	at org[2025-05-24 18:15:55] INFO: Logger initialized
+[2025-05-24 18:15:55] INFO: Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+[2025-05-24 18:15:55] INFO: Cashier 'Ivan Georgiev' added to store
+[2025-05-24 18:15:55] INFO: Cashier 'Teodor Ivanov' added to store
+[2025-05-24 18:15:55] INFO: Register '1' added to store
+[2025-05-24 18:15:55] INFO: Register '2' added to store
+[2025-05-24 18:15:55] INFO: Product 'Milk' added to store with 100 units
+[2025-05-24 18:15:55] INFO: Product 'Bread' added to store with 50 units
+[2025-05-24 18:15:55] INFO: Product 'Soap' added to store with 200 units
+[2025-05-24 18:15:55] INFO: Product 'Paper' added to store with 150 units
+[2025-05-24 18:15:55] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+[2025-05-24 18:15:55] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-24 18:15:55] INFO: Successfully saved receipt #1 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+[2025-05-24 18:15:55] INFO: Sale processed successfully. Receipt #1
+[2025-05-24 18:15:55] INFO: Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+[2025-05-24 18:15:55] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+[2025-05-24 18:15:55] INFO: Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+[2025-05-24 18:15:55] INFO: Sale processed successfully. Receipt #2
