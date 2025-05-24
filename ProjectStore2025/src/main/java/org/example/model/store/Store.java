@@ -141,6 +141,16 @@ public class Store {
 
         // Update inventory atomically
         try {
+            // First, validate all stock levels
+            for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+                Product product = entry.getKey();
+                int quantity = entry.getValue();
+                if (inventory.getStockLevel(product) < quantity) {
+                    throw new StoreException("Insufficient stock for product: " + product.getName());
+                }
+            }
+
+            // Then, update all stock levels
             for (Map.Entry<Product, Integer> entry : items.entrySet()) {
                 Product product = entry.getKey();
                 int quantity = entry.getValue();
@@ -176,10 +186,6 @@ public class Store {
                 throw new StoreException("Cannot sell expired product: " + product.getName());
             }
 
-            if (inventory.getStockLevel(product) < quantity) {
-                throw new StoreException("Insufficient stock for product: " + product.getName());
-            }
-
             double markup = product.getCategory() == ProductCategory.FOOD ? foodMarkup : nonFoodMarkup;
             double price = product.calculateSellingPrice(markup, expirationWarningDays, expirationDiscount);
             total += price * quantity;
@@ -212,70 +218,54 @@ public class Store {
     // Receipt management
     private void saveReceiptToFile(Receipt receipt) {
         String directory = StoreConfig.getReceiptsDirectory();
-        System.out.println("Attempting to save receipt to directory: " + directory);
         StoreLogger.info("Attempting to save receipt to directory: " + directory);
         
         File dir = new File(directory);
         
         // Create directory if it doesn't exist
         if (!dir.exists()) {
-            System.out.println("Receipts directory does not exist, attempting to create: " + directory);
             StoreLogger.info("Receipts directory does not exist, attempting to create: " + directory);
             boolean created = dir.mkdirs();
             if (!created) {
                 String error = "Failed to create receipts directory: " + directory;
-                System.err.println(error);
                 StoreLogger.error(error, new ReceiptException(error));
                 throw new ReceiptException(error);
             }
-            System.out.println("Successfully created receipts directory: " + directory);
             StoreLogger.info("Successfully created receipts directory: " + directory);
         }
 
         // Check if directory is writable
         if (!dir.canWrite()) {
             String error = "Receipts directory is not writable: " + directory;
-            System.err.println(error);
             StoreLogger.error(error, new ReceiptException(error));
             throw new ReceiptException(error);
         }
 
         String fileName = directory + File.separator + "receipt_" + receipt.getReceiptNumber() + ".txt";
         File receiptFile = new File(fileName);
-        System.out.println("Attempting to save receipt to file: " + fileName);
         StoreLogger.info("Attempting to save receipt to file: " + fileName);
         
         try {
             // Create parent directories if they don't exist
             File parentDir = receiptFile.getParentFile();
             if (parentDir != null && !parentDir.exists()) {
-                System.out.println("Creating parent directories for: " + fileName);
                 StoreLogger.info("Creating parent directories for: " + fileName);
                 boolean created = parentDir.mkdirs();
                 if (!created) {
                     String error = "Failed to create parent directories for receipt file: " + fileName;
-                    System.err.println(error);
                     StoreLogger.error(error, new ReceiptException(error));
                     throw new ReceiptException(error);
                 }
             }
 
-            // Save receipt to file
-            try (PrintWriter writer = new PrintWriter(new FileWriter(receiptFile))) {
-                String receiptContent = receipt.toString();
-                System.out.println("Writing receipt content: " + receiptContent);
-                writer.println(receiptContent);
-                writer.flush();
-                System.out.println("Successfully saved receipt #" + receipt.getReceiptNumber() + 
-                    " to file: " + fileName);
+            // Save receipt to file using try-with-resources
+            try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(receiptFile)))) {
+                writer.println(receipt.toString());
                 StoreLogger.info("Successfully saved receipt #" + receipt.getReceiptNumber() + 
                     " to file: " + fileName);
             }
         } catch (IOException e) {
             String error = "Failed to save receipt to file: " + fileName;
-            System.err.println(error);
-            System.err.println("Error details: " + e.getMessage());
-            e.printStackTrace();
             StoreLogger.error(error, e);
             throw new ReceiptException(error, e);
         }
