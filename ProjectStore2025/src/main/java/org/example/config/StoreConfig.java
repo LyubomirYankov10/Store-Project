@@ -11,14 +11,12 @@ public class StoreConfig {
 
     static {
         try {
-            // Try to load from current directory first
             File configFile = new File("store.properties");
             if (configFile.exists()) {
                 try (FileInputStream fis = new FileInputStream(configFile)) {
                     properties.load(fis);
                 }
             } else {
-                // Try to load from resources directory
                 try (FileInputStream fis = new FileInputStream("src/main/resources/store.properties")) {
                     properties.load(fis);
                 }
@@ -28,7 +26,6 @@ public class StoreConfig {
             e.printStackTrace();
         }
 
-        // Set default properties if not found
         if (!properties.containsKey("receipts.directory")) {
             properties.setProperty("receipts.directory", DEFAULT_RECEIPTS_DIR);
         }
@@ -36,9 +33,7 @@ public class StoreConfig {
 
     public static String getReceiptsDirectory() {
         String dir = properties.getProperty("receipts.directory", DEFAULT_RECEIPTS_DIR).trim();
-        // Replace ${user.home} with actual user home directory
         dir = dir.replace("${user.home}", System.getProperty("user.home"));
-        // Normalize path
         try {
             File file = new File(dir);
             return file.getCanonicalPath();

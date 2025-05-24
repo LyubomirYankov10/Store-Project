@@ -1,5 +1,6 @@
 package org.example.util;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,8 +14,8 @@ public class StoreLogger {
 
     static {
         try {
-            // Create log file in the current directory
-            logWriter = new PrintWriter(new FileWriter(LOG_FILE, true));
+            File logFile = new File(LOG_FILE);
+            logWriter = new PrintWriter(new FileWriter(logFile, true));
             info("Logger initialized");
         } catch (IOException e) {
             System.err.println("Failed to initialize logger: " + e.getMessage());
@@ -26,10 +27,10 @@ public class StoreLogger {
         log("INFO", message);
     }
 
-    public static void error(String message, Throwable e) {
-        log("ERROR", message + " - " + e.getMessage());
-        if (e != null) {
-            e.printStackTrace(logWriter);
+    public static void error(String message, Throwable t) {
+        log("ERROR", message);
+        if (t != null) {
+            t.printStackTrace(logWriter);
         }
     }
 
@@ -39,13 +40,9 @@ public class StoreLogger {
 
     private static synchronized void log(String level, String message) {
         if (logWriter != null) {
-            try {
-                String timestamp = LocalDateTime.now().format(formatter);
-                logWriter.println(String.format("[%s] %s: %s", timestamp, level, message));
-                logWriter.flush();
-            } catch (Exception e) {
-                System.err.println("Failed to write to log: " + e.getMessage());
-            }
+            String timestamp = LocalDateTime.now().format(formatter);
+            logWriter.println(timestamp + " [" + level + "] " + message);
+            logWriter.flush();
         }
     }
 

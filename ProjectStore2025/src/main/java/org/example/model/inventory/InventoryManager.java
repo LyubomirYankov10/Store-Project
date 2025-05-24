@@ -26,10 +26,16 @@ public class InventoryManager {
 
     public void addProduct(Product product, int initialStock, int reorderPoint, int reorderQuantity) {
         if (product == null) {
-            throw new ProductException("Cannot add null product to inventory");
+            throw new ProductException("Product cannot be null");
         }
-        if (initialStock < 0 || reorderPoint < 0 || reorderQuantity <= 0) {
-            throw new ProductException("Invalid stock or reorder parameters");
+        if (initialStock < 0) {
+            throw new ProductException("Initial stock cannot be negative");
+        }
+        if (reorderPoint < 0) {
+            throw new ProductException("Reorder point cannot be negative");
+        }
+        if (reorderQuantity <= 0) {
+            throw new ProductException("Reorder quantity must be positive");
         }
 
         stockLevels.put(product, new AtomicInteger(initialStock));
@@ -39,15 +45,17 @@ public class InventoryManager {
     }
 
     public void updateStock(Product product, int quantity) {
-        if (!stockLevels.containsKey(product)) {
-            throw new ProductException("Product not found in inventory: " + product.getName());
+        if (product == null) {
+            throw new ProductException("Product cannot be null");
         }
 
         AtomicInteger currentStock = stockLevels.get(product);
+        if (currentStock == null) {
+            throw new ProductException("Product not found in inventory");
+        }
+
         int newStock = currentStock.addAndGet(quantity);
-        
         if (newStock < 0) {
-            // Rollback the change
             currentStock.addAndGet(-quantity);
             throw new ProductException("Insufficient stock for product: " + product.getName());
         }
@@ -56,18 +64,43 @@ public class InventoryManager {
     }
 
     public int getStockLevel(Product product) {
-        if (!stockLevels.containsKey(product)) {
-            throw new ProductException("Product not found in inventory: " + product.getName());
+        if (product == null) {
+            throw new ProductException("Product cannot be null");
         }
-        return stockLevels.get(product).get();
+
+        AtomicInteger stock = stockLevels.get(product);
+        if (stock == null) {
+            throw new ProductException("Product not found in inventory");
+        }
+
+        return stock.get();
     }
 
     public boolean needsReorder(Product product) {
-        return getStockLevel(product) <= reorderPoints.getOrDefault(product, 0);
+        if (product == null) {
+            throw new ProductException("Product cannot be null");
+        }
+
+        AtomicInteger stock = stockLevels.get(product);
+        Integer reorderPoint = reorderPoints.get(product);
+        if (stock == null || reorderPoint == null) {
+            throw new ProductException("Product not found in inventory");
+        }
+
+        return stock.get() <= reorderPoint;
     }
 
     public int getReorderQuantity(Product product) {
-        return reorderQuantities.getOrDefault(product, 0);
+        if (product == null) {
+            throw new ProductException("Product cannot be null");
+        }
+
+        Integer quantity = reorderQuantities.get(product);
+        if (quantity == null) {
+            throw new ProductException("Product not found in inventory");
+        }
+
+        return quantity;
     }
 
     public List<Product> getLowStockProducts() {
@@ -101,31 +134,24 @@ public class InventoryManager {
 
     public String generateInventoryReport() {
         StringBuilder report = new StringBuilder();
-        report.append("Inventory Report\n");
-        report.append("================\n\n");
-        
-        report.append("Current Stock Levels:\n");
-        report.append("--------------------\n");
+        report.append("Inventory Report:\n");
+        report.append("----------------\n");
+
         for (Map.Entry<Product, AtomicInteger> entry : stockLevels.entrySet()) {
             Product product = entry.getKey();
             int stock = entry.getValue().get();
             int reorderPoint = reorderPoints.get(product);
             int reorderQuantity = reorderQuantities.get(product);
-            
-            report.append(String.format("- %s: %d units", product.getName(), stock));
-            if (stock <= reorderPoint) {
-                report.append(" (LOW STOCK - Reorder Point: ").append(reorderPoint)
-                      .append(", Reorder Quantity: ").append(reorderQuantity).append(")");
-            }
-            if (product.isExpired()) {
-                report.append(" (EXPIRED)");
-                if (product instanceof FoodProduct) {
-                    report.append(" - Expired on: ").append(((FoodProduct) product).getExpirationDate());
-                }
-            }
+
+            report.append(String.format("%s:\n", product.getName()));
+            report.append(String.format("  Current Stock: %d\n", stock));
+            report.append(String.format("  Reorder Point: %d\n", reorderPoint));
+            report.append(String.format("  Reorder Quantity: %d\n", reorderQuantity));
+            report.append(String.format("  Status: %s\n", 
+                stock <= reorderPoint ? "Needs Reorder" : "OK"));
             report.append("\n");
         }
-        
+
         if (!lowStockProducts.isEmpty()) {
             report.append("Low Stock Products:\n");
             report.append("------------------\n");

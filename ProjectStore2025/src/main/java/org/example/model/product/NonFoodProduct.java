@@ -12,7 +12,12 @@ public class NonFoodProduct extends Product {
 
     @Override
     public boolean isExpired() {
-        return false; // Non-food products don't expire
+        return false;
+    }
+
+    @Override
+    public boolean isNearExpiration(int warningDays) {
+        return false;
     }
 
     @Override
@@ -26,11 +31,6 @@ public class NonFoodProduct extends Product {
             throw new IllegalArgumentException("Quantity cannot be negative");
         }
         this.quantity = quantity;
-    }
-
-    @Override
-    public boolean isNearExpiration(int warningDays) {
-        return false; // Non-food products don't expire
     }
 
     @Override

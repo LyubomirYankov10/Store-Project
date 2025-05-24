@@ -60,9 +60,9 @@ class ProductTest {
     @Test
     void testPriceCalculation() {
         double foodPrice = foodProduct.calculateSellingPrice(0.20, 7, 0.10);
-        assertEquals(3.00, foodPrice, 0.001); // 2.50 * 1.20
+        assertEquals(3.00, foodPrice, 0.001);
 
         double nonFoodPrice = nonFoodProduct.calculateSellingPrice(0.15, 7, 0.10);
-        assertEquals(1.725, nonFoodPrice, 0.001); // 1.50 * 1.15
+        assertEquals(1.725, nonFoodPrice, 0.001);
     }
 } 

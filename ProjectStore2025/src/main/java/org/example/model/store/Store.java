@@ -12,14 +12,14 @@ import org.example.util.StoreLogger;
 import org.example.config.StoreConfig;
 
 import java.io.*;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.StandardOpenOption;
 import java.nio.ByteBuffer;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Store {
     private final String name;
@@ -56,7 +56,6 @@ public class Store {
             ", non-food markup: " + nonFoodMarkup);
     }
 
-    // Cashier management
     public void addCashier(Cashier cashier) {
         if (cashier == null) {
             throw new StoreException("Cannot add null cashier");
@@ -80,7 +79,6 @@ public class Store {
         StoreLogger.info("Cashier '" + cashier.getName() + "' removed from store");
     }
 
-    // Register management
     public void addRegister(CashRegister register) {
         if (register == null) {
             throw new StoreException("Cannot add null register");
@@ -100,7 +98,6 @@ public class Store {
         StoreLogger.info("Register '" + register.getId() + "' removed from store");
     }
 
-    // Product management
     public void addProduct(Product product, int initialStock, int reorderPoint, int reorderQuantity) {
         if (product == null) {
             throw new StoreException("Cannot add null product");
@@ -121,7 +118,6 @@ public class Store {
         StoreLogger.info("Product '" + product.getName() + "' removed from store");
     }
 
-    // Sales operations
     public Receipt processSale(CashRegister register, Map<Product, Integer> items, double payment) {
         if (register == null) {
             throw new StoreException("Register cannot be null");
@@ -137,19 +133,15 @@ public class Store {
             throw new StoreException("No cashier assigned to register");
         }
 
-        // Calculate total amount and validate stock
         double totalAmount = calculateTotalAmount(items);
 
         if (payment < totalAmount) {
             throw new StoreException("Insufficient payment. Required: " + totalAmount + ", Provided: " + payment);
         }
 
-        // Create a copy of items for transaction
         Map<Product, Integer> transactionItems = new HashMap<>(items);
         
-        // Update inventory atomically
         try {
-            // First, validate all stock levels
             for (Map.Entry<Product, Integer> entry : transactionItems.entrySet()) {
                 Product product = entry.getKey();
                 int quantity = entry.getValue();
@@ -158,7 +150,6 @@ public class Store {
                 }
             }
 
-            // Then, update all stock levels
             for (Map.Entry<Product, Integer> entry : transactionItems.entrySet()) {
                 Product product = entry.getKey();
                 int quantity = entry.getValue();
@@ -178,7 +169,6 @@ public class Store {
             saveReceiptToFile(receipt);
             StoreLogger.info("Sale processed successfully. Receipt #" + receipt.getReceiptNumber());
         } catch (Exception e) {
-            // Rollback inventory changes if receipt creation fails
             try {
                 for (Map.Entry<Product, Integer> entry : transactionItems.entrySet()) {
                     Product product = entry.getKey();
@@ -212,7 +202,6 @@ public class Store {
         return total;
     }
 
-    // Financial calculations
     public double getTotalRevenue() {
         return totalRevenue.get();
     }
@@ -225,7 +214,6 @@ public class Store {
         return totalRevenue.get() - totalExpenses.get();
     }
 
-    // Analytics
     public String getAnalyticsReport() {
         return analytics.generateReport();
     }
@@ -234,14 +222,12 @@ public class Store {
         return inventory.generateInventoryReport();
     }
 
-    // Receipt management
     private void saveReceiptToFile(Receipt receipt) {
         String directory = StoreConfig.getReceiptsDirectory();
         StoreLogger.info("Attempting to save receipt to directory: " + directory);
         
         File dir = new File(directory);
         
-        // Create directory if it doesn't exist
         if (!dir.exists()) {
             StoreLogger.info("Receipts directory does not exist, attempting to create: " + directory);
             boolean created = dir.mkdirs();
@@ -253,7 +239,6 @@ public class Store {
             StoreLogger.info("Successfully created receipts directory: " + directory);
         }
 
-        // Check if directory is writable
         if (!dir.canWrite()) {
             String error = "Receipts directory is not writable: " + directory;
             StoreLogger.error(error, new ReceiptException(error));
@@ -265,7 +250,6 @@ public class Store {
         StoreLogger.info("Attempting to save receipt to file: " + fileName);
         
         try {
-            // Create parent directories if they don't exist
             File parentDir = receiptFile.getParentFile();
             if (parentDir != null && !parentDir.exists()) {
                 StoreLogger.info("Creating parent directories for: " + fileName);
@@ -277,23 +261,20 @@ public class Store {
                 }
             }
 
-            // Save receipt to file using try-with-resources
             try (FileChannel channel = FileChannel.open(receiptFile.toPath(), 
                     StandardOpenOption.CREATE, 
                     StandardOpenOption.WRITE, 
                     StandardOpenOption.TRUNCATE_EXISTING)) {
                 
-                // Try to acquire the lock
                 try (FileLock lock = channel.tryLock()) {
                     if (lock == null) {
                         throw new ReceiptException("Could not acquire file lock for receipt: " + fileName);
                     }
                     
-                    // Write the receipt content
                     String receiptContent = receipt.toString();
                     ByteBuffer buffer = ByteBuffer.wrap(receiptContent.getBytes());
                     channel.write(buffer);
-                    channel.force(true); // Ensure data is written to disk
+                    channel.force(true);
                     
                     StoreLogger.info("Successfully saved receipt #" + receipt.getReceiptNumber() + 
                         " to file: " + fileName);
@@ -315,14 +296,12 @@ public class Store {
             while ((line = reader.readLine()) != null) {
                 content.append(line).append("\n");
             }
-            // TODO: Implement proper receipt parsing
             throw new UnsupportedOperationException("Receipt loading not implemented yet");
         } catch (IOException e) {
             throw new ReceiptException("Failed to load receipt from file: " + fileName, e);
         }
     }
 
-    // Getters
     public String getName() {
         return name;
     }

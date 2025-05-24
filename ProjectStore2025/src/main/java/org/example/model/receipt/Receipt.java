@@ -50,7 +50,6 @@ public class Receipt implements Serializable {
     private static synchronized int generateReceiptNumber() {
         int current = nextReceiptNumber.get();
         if (current >= MAX_RECEIPT_NUMBER) {
-            // Reset to 1 if we reach the maximum
             nextReceiptNumber.set(1);
             return 1;
         }
@@ -101,14 +100,12 @@ public class Receipt implements Serializable {
         return sb.toString();
     }
 
-    // Custom serialization methods
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        // Validate the deserialized object
         if (cashier == null || items == null || dateTime == null) {
             throw new ReceiptException("Invalid receipt data during deserialization");
         }

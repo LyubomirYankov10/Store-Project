@@ -81,11 +81,7 @@ class ReceiptTest {
     void testGetItemsReturnsCopy() {
         Receipt receipt = new Receipt(cashier, items, 20.0);
         Map<Product, Integer> returnedItems = receipt.getItems();
-        
-        // Modify the returned map
         returnedItems.put(milk, 5);
-        
-        // Original items should not be affected
         assertEquals(2, items.get(milk));
         assertEquals(2, receipt.getItems().get(milk));
     }

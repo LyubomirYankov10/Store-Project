@@ -47,8 +47,8 @@ class StoreAnalyticsTest {
         paper = new NonFoodProduct("Paper", 3.0, 4.0);
 
         // Add some initial expenses
-        analytics.addExpense(2000.0); // Cashier 1 salary
-        analytics.addExpense(2200.0); // Cashier 2 salary
+        analytics.addExpense(2000.0);
+        analytics.addExpense(2200.0);
     }
 
     @Test

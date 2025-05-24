@@ -11,11 +11,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StoreAnalytics {
     private final List<Receipt> receipts;
-    private final Map<Product, Integer> productSales;
-    private final Map<Cashier, Double> cashierPerformance;
+    private final Map<Product, AtomicInteger> productSales;
+    private final Map<Cashier, AtomicInteger> cashierTransactions;
+    private final Map<Cashier, AtomicReference<Double>> cashierRevenue;
     private final AtomicReference<Double> totalRevenue;
     private final AtomicReference<Double> totalExpenses;
     private final LocalDateTime startDate;
@@ -26,7 +28,8 @@ public class StoreAnalytics {
     public StoreAnalytics() {
         this.receipts = new CopyOnWriteArrayList<>();
         this.productSales = new ConcurrentHashMap<>();
-        this.cashierPerformance = new ConcurrentHashMap<>();
+        this.cashierTransactions = new ConcurrentHashMap<>();
+        this.cashierRevenue = new ConcurrentHashMap<>();
         this.totalRevenue = new AtomicReference<>(0.0);
         this.totalExpenses = new AtomicReference<>(0.0);
         this.startDate = LocalDateTime.now();
@@ -39,16 +42,18 @@ public class StoreAnalytics {
         receipts.add(receipt);
         totalRevenue.updateAndGet(current -> current + receipt.getTotalAmount());
         
-        // Update product sales
         for (Map.Entry<Product, Integer> entry : receipt.getItems().entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
-            productSales.merge(product, quantity, Integer::sum);
+            productSales.computeIfAbsent(product, k -> new AtomicInteger(0))
+                       .addAndGet(quantity);
         }
         
-        // Update cashier performance
         Cashier cashier = receipt.getCashier();
-        cashierPerformance.merge(cashier, receipt.getTotalAmount(), Double::sum);
+        cashierTransactions.computeIfAbsent(cashier, k -> new AtomicInteger(0))
+                          .incrementAndGet();
+        cashierRevenue.computeIfAbsent(cashier, k -> new AtomicReference<>(0.0))
+                     .updateAndGet(current -> current + receipt.getTotalAmount());
     }
 
     public void addExpense(double amount) {
@@ -72,19 +77,19 @@ public class StoreAnalytics {
             throw new IllegalArgumentException("Limit cannot be negative");
         }
         return productSales.entrySet().stream()
-            .sorted(Map.Entry.<Product, Integer>comparingByValue().reversed())
+            .sorted(Map.Entry.<Product, AtomicInteger>comparingByValue(Comparator.comparingInt(AtomicInteger::get)).reversed())
             .limit(limit)
-            .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), HashMap::putAll);
+            .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue().get()), HashMap::putAll);
     }
 
     public Map<Cashier, Double> getTopPerformingCashiers(int limit) {
         if (limit < 0) {
             throw new IllegalArgumentException("Limit cannot be negative");
         }
-        return cashierPerformance.entrySet().stream()
-            .sorted(Map.Entry.<Cashier, Double>comparingByValue().reversed())
+        return cashierRevenue.entrySet().stream()
+            .sorted(Map.Entry.<Cashier, AtomicReference<Double>>comparingByValue(Comparator.comparingDouble(AtomicReference<Double>::get)).reversed())
             .limit(limit)
-            .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), HashMap::putAll);
+            .collect(HashMap::new, (m, e) -> m.put(e.getKey(), e.getValue().get()), HashMap::putAll);
     }
 
     public double getAverageTransactionValue() {
@@ -106,6 +111,27 @@ public class StoreAnalytics {
 
     public double getTotalRevenue() {
         return totalRevenue.get();
+    }
+
+    public int getProductSales(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("Product cannot be null");
+        }
+        return productSales.getOrDefault(product, new AtomicInteger(0)).get();
+    }
+
+    public int getCashierTransactions(Cashier cashier) {
+        if (cashier == null) {
+            throw new IllegalArgumentException("Cashier cannot be null");
+        }
+        return cashierTransactions.getOrDefault(cashier, new AtomicInteger(0)).get();
+    }
+
+    public double getCashierRevenue(Cashier cashier) {
+        if (cashier == null) {
+            throw new IllegalArgumentException("Cashier cannot be null");
+        }
+        return cashierRevenue.getOrDefault(cashier, new AtomicReference<>(0.0)).get();
     }
 
     public String generateReport() {

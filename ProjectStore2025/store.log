@@ -461,3 +461,21 @@ Caused by: java.nio.channels.ClosedChannelException
 [2025-05-24 18:15:55] INFO: Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
 [2025-05-24 18:15:55] INFO: Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
 [2025-05-24 18:15:55] INFO: Sale processed successfully. Receipt #2
+2025-05-24 22:39:50 [INFO] Logger initialized
+2025-05-24 22:39:50 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-24 22:39:50 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-24 22:39:50 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-24 22:39:50 [INFO] Register '1' added to store
+2025-05-24 22:39:50 [INFO] Register '2' added to store
+2025-05-24 22:39:50 [INFO] Product 'Milk' added to store with 100 units
+2025-05-24 22:39:50 [INFO] Product 'Bread' added to store with 50 units
+2025-05-24 22:39:50 [INFO] Product 'Soap' added to store with 200 units
+2025-05-24 22:39:50 [INFO] Product 'Paper' added to store with 150 units
+2025-05-24 22:39:50 [INFO] Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+2025-05-24 22:39:50 [INFO] Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+2025-05-24 22:39:50 [INFO] Successfully saved receipt #1 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+2025-05-24 22:39:50 [INFO] Sale processed successfully. Receipt #1
+2025-05-24 22:39:50 [INFO] Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+2025-05-24 22:39:50 [INFO] Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+2025-05-24 22:39:50 [INFO] Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+2025-05-24 22:39:50 [INFO] Sale processed successfully. Receipt #2
