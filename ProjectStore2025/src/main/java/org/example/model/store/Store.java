@@ -155,19 +155,16 @@ public class Store {
                 int quantity = entry.getValue();
                 inventory.updateStock(product, -quantity);
             }
-        } catch (ProductException e) {
-            throw new StoreException("Failed to update inventory: " + e.getMessage(), e);
-        }
 
-        Receipt receipt = null;
-        try {
-            receipt = new Receipt(register.getAssignedCashier(), transactionItems, totalAmount);
+            Receipt receipt = new Receipt(register.getAssignedCashier(), transactionItems, totalAmount);
             receipts.add(receipt);
             totalRevenue.updateAndGet(current -> current + totalAmount);
             analytics.addReceipt(receipt);
 
             saveReceiptToFile(receipt);
             StoreLogger.info("Sale processed successfully. Receipt #" + receipt.getReceiptNumber());
+            
+            return receipt;
         } catch (Exception e) {
             try {
                 for (Map.Entry<Product, Integer> entry : transactionItems.entrySet()) {
@@ -181,125 +178,24 @@ public class Store {
             StoreLogger.error("Failed to process sale", e);
             throw new StoreException("Failed to process sale: " + e.getMessage(), e);
         }
-
-        return receipt;
     }
 
     private double calculateTotalAmount(Map<Product, Integer> items) {
-        double total = 0.0;
-        for (Map.Entry<Product, Integer> entry : items.entrySet()) {
-            Product product = entry.getKey();
-            int quantity = entry.getValue();
-            
-            if (product.isExpired()) {
-                throw new StoreException("Cannot sell expired product: " + product.getName());
-            }
-
-            double markup = product.getCategory() == ProductCategory.FOOD ? foodMarkup : nonFoodMarkup;
-            double price = product.calculateSellingPrice(markup, expirationWarningDays, expirationDiscount);
-            total += price * quantity;
-        }
-        return total;
+        return items.entrySet().stream()
+                .mapToDouble(entry -> entry.getKey().calculateSellingPrice() * entry.getValue())
+                .sum();
     }
 
     public double getTotalRevenue() {
-        return totalRevenue.get();
+        return Math.round(totalRevenue.get() * 100.0) / 100.0;
     }
 
     public double getTotalExpenses() {
-        return totalExpenses.get();
+        return Math.round(totalExpenses.get() * 100.0) / 100.0;
     }
 
     public double getProfit() {
-        return totalRevenue.get() - totalExpenses.get();
-    }
-
-    public String getAnalyticsReport() {
-        return analytics.generateReport();
-    }
-
-    public String getInventoryReport() {
-        return inventory.generateInventoryReport();
-    }
-
-    private void saveReceiptToFile(Receipt receipt) {
-        String directory = StoreConfig.getReceiptsDirectory();
-        StoreLogger.info("Attempting to save receipt to directory: " + directory);
-        
-        File dir = new File(directory);
-        
-        if (!dir.exists()) {
-            StoreLogger.info("Receipts directory does not exist, attempting to create: " + directory);
-            boolean created = dir.mkdirs();
-            if (!created) {
-                String error = "Failed to create receipts directory: " + directory;
-                StoreLogger.error(error, new ReceiptException(error));
-                throw new ReceiptException(error);
-            }
-            StoreLogger.info("Successfully created receipts directory: " + directory);
-        }
-
-        if (!dir.canWrite()) {
-            String error = "Receipts directory is not writable: " + directory;
-            StoreLogger.error(error, new ReceiptException(error));
-            throw new ReceiptException(error);
-        }
-
-        String fileName = directory + File.separator + "receipt_" + receipt.getReceiptNumber() + ".txt";
-        File receiptFile = new File(fileName);
-        StoreLogger.info("Attempting to save receipt to file: " + fileName);
-        
-        try {
-            File parentDir = receiptFile.getParentFile();
-            if (parentDir != null && !parentDir.exists()) {
-                StoreLogger.info("Creating parent directories for: " + fileName);
-                boolean created = parentDir.mkdirs();
-                if (!created) {
-                    String error = "Failed to create parent directories for receipt file: " + fileName;
-                    StoreLogger.error(error, new ReceiptException(error));
-                    throw new ReceiptException(error);
-                }
-            }
-
-            try (FileChannel channel = FileChannel.open(receiptFile.toPath(), 
-                    StandardOpenOption.CREATE, 
-                    StandardOpenOption.WRITE, 
-                    StandardOpenOption.TRUNCATE_EXISTING)) {
-                
-                try (FileLock lock = channel.tryLock()) {
-                    if (lock == null) {
-                        throw new ReceiptException("Could not acquire file lock for receipt: " + fileName);
-                    }
-                    
-                    String receiptContent = receipt.toString();
-                    ByteBuffer buffer = ByteBuffer.wrap(receiptContent.getBytes());
-                    channel.write(buffer);
-                    channel.force(true);
-                    
-                    StoreLogger.info("Successfully saved receipt #" + receipt.getReceiptNumber() + 
-                        " to file: " + fileName);
-                }
-            }
-        } catch (IOException e) {
-            String error = "Failed to save receipt to file: " + fileName;
-            StoreLogger.error(error, e);
-            throw new ReceiptException(error, e);
-        }
-    }
-
-    public Receipt loadReceiptFromFile(int receiptNumber) {
-        String fileName = StoreConfig.getReceiptsDirectory() + File.separator + 
-            "receipt_" + receiptNumber + ".txt";
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-            throw new UnsupportedOperationException("Receipt loading not implemented yet");
-        } catch (IOException e) {
-            throw new ReceiptException("Failed to load receipt from file: " + fileName, e);
-        }
+        return Math.round((getTotalRevenue() - getTotalExpenses()) * 100.0) / 100.0;
     }
 
     public String getName() {
@@ -307,18 +203,44 @@ public class Store {
     }
 
     public List<Cashier> getCashiers() {
-        return Collections.unmodifiableList(cashiers);
+        return new ArrayList<>(cashiers);
     }
 
     public List<CashRegister> getRegisters() {
-        return Collections.unmodifiableList(registers);
+        return new ArrayList<>(registers);
     }
 
     public List<Product> getProducts() {
-        return Collections.unmodifiableList(products);
+        return new ArrayList<>(products);
     }
 
     public List<Receipt> getReceipts() {
-        return Collections.unmodifiableList(receipts);
+        return new ArrayList<>(receipts);
+    }
+
+    public String getAnalyticsReport() {
+        return analytics.generateReport();
+    }
+
+    public String getInventoryReport() {
+        return inventory.generateReport();
+    }
+
+    private void saveReceiptToFile(Receipt receipt) throws ReceiptException {
+        String receiptsDir = StoreConfig.getReceiptsDirectory();
+        File dir = new File(receiptsDir);
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new ReceiptException("Failed to create receipts directory: " + receiptsDir);
+        }
+
+        String fileName = String.format("receipt_%d.ser", receipt.getReceiptNumber());
+        File file = new File(dir, fileName);
+
+        try (FileOutputStream fos = new FileOutputStream(file);
+             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+            oos.writeObject(receipt);
+        } catch (IOException e) {
+            throw new ReceiptException("Failed to save receipt: " + e.getMessage(), e);
+        }
     }
 } 

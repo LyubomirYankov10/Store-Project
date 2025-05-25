@@ -87,7 +87,7 @@ public class Receipt implements Serializable {
         for (Map.Entry<Product, Integer> entry : items.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
-            double price = product.getDeliveryPrice();
+            double price = product.calculateSellingPrice();
             double subtotal = price * quantity;
             sb.append(String.format("- %s x%d (%s each) = %s\n",
                 product.getName(),

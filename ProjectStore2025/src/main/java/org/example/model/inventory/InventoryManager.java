@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class InventoryManager {
     private final Map<Product, AtomicInteger> stockLevels;
@@ -15,6 +17,7 @@ public class InventoryManager {
     private final Map<Product, Integer> reorderQuantities;
     private final List<Product> lowStockProducts;
     private final List<Product> expiredProducts;
+    private static final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
 
     public InventoryManager() {
         this.stockLevels = new ConcurrentHashMap<>();
@@ -175,6 +178,39 @@ public class InventoryManager {
             });
         }
 
+        return report.toString();
+    }
+
+    public String generateReport() {
+        StringBuilder report = new StringBuilder();
+        report.append("Inventory Report\n");
+        report.append("================\n\n");
+        
+        report.append("Current Stock Levels:\n");
+        report.append("--------------------\n");
+        
+        for (Map.Entry<Product, AtomicInteger> entry : stockLevels.entrySet()) {
+            Product product = entry.getKey();
+            int stock = entry.getValue().get();
+            int reorderPoint = reorderPoints.get(product);
+            int reorderQuantity = reorderQuantities.get(product);
+            
+            report.append(String.format("%s:\n", product.getName()));
+            report.append(String.format("  Current Stock: %d units\n", stock));
+            report.append(String.format("  Reorder Point: %d units\n", reorderPoint));
+            report.append(String.format("  Reorder Quantity: %d units\n", reorderQuantity));
+            
+            if (stock <= reorderPoint) {
+                report.append("  STATUS: LOW STOCK - Reorder needed!\n");
+            }
+            
+            if (product.isNearExpiration(7)) {
+                report.append("  STATUS: NEAR EXPIRATION - Consider discounting!\n");
+            }
+            
+            report.append("\n");
+        }
+        
         return report.toString();
     }
 } 

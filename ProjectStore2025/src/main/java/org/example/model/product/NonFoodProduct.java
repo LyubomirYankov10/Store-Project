@@ -1,45 +1,23 @@
 package org.example.model.product;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 
-public class NonFoodProduct extends Product {
-    private int quantity;
+public class NonFoodProduct extends Product implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    public NonFoodProduct(String name, double deliveryPrice, double sellingPrice) {
-        super(name, deliveryPrice, sellingPrice, ProductCategory.NON_FOOD);
-        this.quantity = 0;
+    public NonFoodProduct(String name, double deliveryPrice, int quantity) {
+        super(name, deliveryPrice, quantity);
     }
 
     @Override
-    public boolean isExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isNearExpiration(int warningDays) {
-        return false;
-    }
-
-    @Override
-    public int getQuantity() {
-        return quantity;
-    }
-
-    @Override
-    public void setQuantity(int quantity) {
-        if (quantity < 0) {
-            throw new IllegalArgumentException("Quantity cannot be negative");
-        }
-        this.quantity = quantity;
-    }
-
-    @Override
-    public double calculateSellingPrice(double markup, int warningDays, double expirationDiscount) {
+    public double calculateSellingPrice() {
+        double markup = 0.15; // 15% markup for non-food products
         return getDeliveryPrice() * (1 + markup);
     }
 
     @Override
     public String toString() {
-        return super.toString() + String.format(", Quantity: %d", quantity);
+        return String.format("%s{name='%s', deliveryPrice=%s, quantity=%d}",
+            getClass().getSimpleName(), getName(), getDeliveryPrice(), getQuantity());
     }
 } 

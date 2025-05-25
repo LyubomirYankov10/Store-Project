@@ -52,15 +52,10 @@ public class Main {
             System.out.println("Register 1: " + (register1.isAssigned() ? register1.getAssignedCashier().getName() : "No cashier assigned"));
             System.out.println("Register 2: " + (register2.isAssigned() ? register2.getAssignedCashier().getName() : "No cashier assigned"));
 
-            FoodProduct milk = new FoodProduct("Milk", 2.0, 2.5, LocalDate.now().plusDays(7));
-            FoodProduct bread = new FoodProduct("Bread", 1.5, 2.0, LocalDate.now().plusDays(5));
-            NonFoodProduct soap = new NonFoodProduct("Soap", 1.0, 1.5);
-            NonFoodProduct paper = new NonFoodProduct("Paper", 3.0, 4.0);
-
-            milk.setQuantity(100);
-            bread.setQuantity(50);
-            soap.setQuantity(200);
-            paper.setQuantity(150);
+            FoodProduct milk = new FoodProduct("Milk", 2.0, 100, LocalDate.now().plusDays(7));
+            FoodProduct bread = new FoodProduct("Bread", 1.5, 50, LocalDate.now().plusDays(5));
+            NonFoodProduct soap = new NonFoodProduct("Soap", 1.0, 200);
+            NonFoodProduct paper = new NonFoodProduct("Paper", 3.0, 150);
 
             store.addProduct(milk, 100, 20, 50);
             store.addProduct(bread, 50, 10, 30);
@@ -107,13 +102,11 @@ public class Main {
         
         if (!dir.exists()) {
             System.out.println("Creating receipts directory...");
-            boolean created = dir.mkdirs();
-            if (created) {
-                System.out.println("Successfully created receipts directory");
-            } else {
+            if (!dir.mkdirs()) {
                 System.err.println("Failed to create receipts directory");
                 throw new RuntimeException("Failed to create receipts directory: " + directory);
             }
+            System.out.println("Successfully created receipts directory");
         } else {
             System.out.println("Receipts directory already exists");
         }

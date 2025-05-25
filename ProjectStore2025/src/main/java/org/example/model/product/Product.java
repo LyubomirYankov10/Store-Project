@@ -1,22 +1,31 @@
 package org.example.model.product;
 
-public abstract class Product {
-    private String name;
-    private double deliveryPrice;
-    private double sellingPrice;
-    private ProductCategory category;
+import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.text.NumberFormat;
+import java.util.Locale;
 
-    public Product(String name, double deliveryPrice, double sellingPrice, ProductCategory category) {
+public abstract class Product implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private final String name;
+    private final double deliveryPrice;
+    private final AtomicInteger quantity;
+    private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+
+    public Product(String name, double deliveryPrice, int quantity) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Product name cannot be null or empty");
+        }
+        if (deliveryPrice <= 0) {
+            throw new IllegalArgumentException("Delivery price must be positive");
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }
         this.name = name;
         this.deliveryPrice = deliveryPrice;
-        this.sellingPrice = sellingPrice;
-        this.category = category;
+        this.quantity = new AtomicInteger(quantity);
     }
-
-    public abstract boolean isExpired();
-    public abstract int getQuantity();
-    public abstract boolean isNearExpiration(int warningDays);
-    public abstract void setQuantity(int quantity);
 
     public String getName() {
         return name;
@@ -26,25 +35,43 @@ public abstract class Product {
         return deliveryPrice;
     }
 
-    public double getSellingPrice() {
-        return sellingPrice;
+    public int getQuantity() {
+        return quantity.get();
     }
 
-    public ProductCategory getCategory() {
-        return category;
-    }
-
-    public double calculateSellingPrice(double markup, int expirationWarningDays, double expirationDiscount) {
-        double basePrice = sellingPrice * (1 + markup);
-        if (isExpired()) {
-            return basePrice * (1 - expirationDiscount);
+    public void addQuantity(int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
         }
-        return basePrice;
+        quantity.addAndGet(amount);
+    }
+
+    public void removeQuantity(int amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Amount must be positive");
+        }
+        int currentQuantity = quantity.get();
+        if (currentQuantity < amount) {
+            throw new IllegalStateException("Not enough quantity available");
+        }
+        if (!quantity.compareAndSet(currentQuantity, currentQuantity - amount)) {
+            throw new IllegalStateException("Quantity changed during removal");
+        }
+    }
+
+    public abstract double calculateSellingPrice();
+
+    public boolean isExpired() {
+        return false; // Default implementation for non-food products
+    }
+
+    public boolean isNearExpiration(int warningDays) {
+        return false; // Default implementation for non-food products
     }
 
     @Override
     public String toString() {
-        return String.format("%s (Category: %s, Delivery Price: $%.2f, Selling Price: $%.2f)",
-            name, category, deliveryPrice, sellingPrice);
+        return String.format("%s{name='%s', deliveryPrice=%s, quantity=%d}",
+            getClass().getSimpleName(), name, currencyFormat.format(deliveryPrice), quantity.get());
     }
 } 

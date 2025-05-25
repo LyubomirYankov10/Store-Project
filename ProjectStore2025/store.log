@@ -479,3 +479,104 @@ Caused by: java.nio.channels.ClosedChannelException
 2025-05-24 22:39:50 [INFO] Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
 2025-05-24 22:39:50 [INFO] Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
 2025-05-24 22:39:50 [INFO] Sale processed successfully. Receipt #2
+2025-05-25 21:48:37 [INFO] Logger initialized
+2025-05-25 21:48:37 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-25 21:48:37 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-25 21:48:37 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-25 21:48:37 [INFO] Register '1' added to store
+2025-05-25 21:48:37 [INFO] Register '2' added to store
+2025-05-25 21:48:37 [INFO] Product 'Milk' added to store with 100 units
+2025-05-25 21:48:37 [INFO] Product 'Bread' added to store with 50 units
+2025-05-25 21:48:37 [INFO] Product 'Soap' added to store with 200 units
+2025-05-25 21:48:37 [INFO] Product 'Paper' added to store with 150 units
+2025-05-25 21:48:37 [INFO] Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+2025-05-25 21:48:37 [INFO] Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+2025-05-25 21:48:37 [INFO] Successfully saved receipt #1 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_1.txt
+2025-05-25 21:48:37 [INFO] Sale processed successfully. Receipt #1
+2025-05-25 21:48:37 [INFO] Attempting to save receipt to directory: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts
+2025-05-25 21:48:37 [INFO] Attempting to save receipt to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+2025-05-25 21:48:37 [INFO] Successfully saved receipt #2 to file: C:\Users\Lyubo Yankov\Desktop\ProjectStore2025\receipts\receipt_2.txt
+2025-05-25 21:48:37 [INFO] Sale processed successfully. Receipt #2
+2025-05-25 21:54:09 [INFO] Logger initialized
+2025-05-25 21:54:09 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-25 21:54:09 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-25 21:54:09 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-25 21:54:09 [INFO] Register '1' added to store
+2025-05-25 21:54:09 [INFO] Register '2' added to store
+2025-05-25 21:54:09 [INFO] Product 'Milk' added to store with 100 units
+2025-05-25 21:54:09 [INFO] Product 'Bread' added to store with 50 units
+2025-05-25 21:54:09 [INFO] Product 'Soap' added to store with 200 units
+2025-05-25 21:54:09 [INFO] Product 'Paper' added to store with 150 units
+2025-05-25 21:54:09 [ERROR] Failed to process sale
+org.example.exception.ReceiptException: Failed to save receipt: org.example.model.store.Cashier
+	at org.example.model.store.Store.saveReceiptToFile(Store.java:254)
+	at org.example.model.store.Store.processSale(Store.java:164)
+	at org.example.Main.main(Main.java:73)
+Caused by: java.io.NotSerializableException: org.example.model.store.Cashier
+	at java.base/java.io.ObjectOutputStream.writeObject0(ObjectOutputStream.java:1200)
+	at java.base/java.io.ObjectOutputStream.defaultWriteFields(ObjectOutputStream.java:1585)
+	at java.base/java.io.ObjectOutputStream.defaultWriteObject(ObjectOutputStream.java:451)
+	at org.example.model.receipt.Receipt.writeObject(Receipt.java:104)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.io.ObjectStreamClass.invokeWriteObject(ObjectStreamClass.java:1072)
+	at java.base/java.io.ObjectOutputStream.writeSerialData(ObjectOutputStream.java:12025-05-25 21:58:57 [INFO] Logger initialized
+2025-05-25 21:58:57 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-25 21:58:57 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-25 21:58:57 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-25 21:58:57 [INFO] Register '1' added to store
+2025-05-25 21:58:57 [INFO] Register '2' added to store
+2025-05-25 21:58:57 [INFO] Product 'Milk' added to store with 100 units
+2025-05-25 21:58:57 [INFO] Product 'Bread' added to store with 50 units
+2025-05-25 21:58:57 [INFO] Product 'Soap' added to store with 200 units
+2025-05-25 21:58:57 [INFO] Product 'Paper' added to store with 150 units
+2025-05-25 21:58:57 [INFO] Sale processed successfully. Receipt #1
+2025-05-25 21:58:57 [INFO] Sale processed successfully. Receipt #2
+2025-05-25 21:59:49 [INFO] Logger initialized
+2025-05-25 21:59:49 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-25 21:59:49 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-25 21:59:49 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-25 21:59:49 [INFO] Register '1' added to store
+2025-05-25 21:59:49 [INFO] Register '2' added to store
+2025-05-25 21:59:49 [INFO] Product 'Milk' added to store with 100 units
+2025-05-25 21:59:49 [INFO] Product 'Bread' added to store with 50 units
+2025-05-25 21:59:49 [INFO] Product 'Soap' added to store with 200 units
+2025-05-25 21:59:49 [INFO] Product 'Paper' added to store with 150 units
+2025-05-25 21:59:49 [INFO] Sale processed successfully. Receipt #1
+2025-05-25 21:59:49 [INFO] Sale processed successfully. Receipt #2
+2025-05-25 22:00:35 [INFO] Logger initialized
+2025-05-25 22:00:35 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-25 22:00:35 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-25 22:00:35 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-25 22:00:35 [INFO] Register '1' added to store
+2025-05-25 22:00:35 [INFO] Register '2' added to store
+2025-05-25 22:00:35 [INFO] Product 'Milk' added to store with 100 units
+2025-05-25 22:00:35 [INFO] Product 'Bread' added to store with 50 units
+2025-05-25 22:00:35 [INFO] Product 'Soap' added to store with 200 units
+2025-05-25 22:00:35 [INFO] Product 'Paper' added to store with 150 units
+2025-05-25 22:00:35 [INFO] Sale processed successfully. Receipt #1
+2025-05-25 22:00:35 [INFO] Sale processed successfully. Receipt #2
+2025-05-25 22:01:25 [INFO] Logger initialized
+2025-05-25 22:01:25 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-25 22:01:25 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-25 22:01:25 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-25 22:01:25 [INFO] Register '1' added to store
+2025-05-25 22:01:25 [INFO] Register '2' added to store
+2025-05-25 22:01:25 [INFO] Product 'Milk' added to store with 100 units
+2025-05-25 22:01:25 [INFO] Product 'Bread' added to store with 50 units
+2025-05-25 22:01:25 [INFO] Product 'Soap' added to store with 200 units
+2025-05-25 22:01:25 [INFO] Product 'Paper' added to store with 150 units
+2025-05-25 22:01:25 [INFO] Sale processed successfully. Receipt #1
+2025-05-25 22:01:25 [INFO] Sale processed successfully. Receipt #2
+2025-05-25 22:02:27 [INFO] Logger initialized
+2025-05-25 22:02:27 [INFO] Store 'Fantistiko' created with food markup: 0.15, non-food markup: 0.2
+2025-05-25 22:02:27 [INFO] Cashier 'Ivan Georgiev' added to store
+2025-05-25 22:02:27 [INFO] Cashier 'Teodor Ivanov' added to store
+2025-05-25 22:02:27 [INFO] Register '1' added to store
+2025-05-25 22:02:27 [INFO] Register '2' added to store
+2025-05-25 22:02:27 [INFO] Product 'Milk' added to store with 100 units
+2025-05-25 22:02:27 [INFO] Product 'Bread' added to store with 50 units
+2025-05-25 22:02:27 [INFO] Product 'Soap' added to store with 200 units
+2025-05-25 22:02:27 [INFO] Product 'Paper' added to store with 150 units
+2025-05-25 22:02:27 [INFO] Sale processed successfully. Receipt #1
+2025-05-25 22:02:27 [INFO] Sale processed successfully. Receipt #2
